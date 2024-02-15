@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SimorghOCR</title>
+    <meta name="description" content="ペルシア語に特化した光学文字認識（OCR）アプリケーションです。">
+    <meta name="keywords" content="OCR, 光学文字認識, ペルシア語, ペルシャ語, TesseractOCR, EasyOCR, kraken, Transkribus">
+    <meta name="author" content="石川喜堂">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+
+        header, main {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        header h1, header h2 {
+            text-align: center; /* 中央揃えに変更 */
+            margin: 0; /* 上下のマージンを取り除く（必要に応じて） */
+            padding: 10px 0; /* 上下にパディングを追加（視覚的な余白を確保するため） */
+        }
+
+        section {
+            margin-bottom: 40px;
+        }
+
+        section h3, section h4 {
+            color: #333;
+        }
+
+        ul, ol {
+            padding-left: 20px;
+        }
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>SimorghOCR</h1>
+        <h2>ーペルシア語専用OCRの開発ページー</h2>
+    </header>
+    <main>
+        <section>
+            <img src="1.png" alt="画像の説明" style="display: block; margin: 0 auto;">
+            <p>私個人のペルシア詩研究を進めるため、ペルシア語専用のOCRツールを開発しています。</p>
+            <p>第１弾として、TesseractOCRとEasyOCRのペルシア語事前学習モデルを選択し、適用できるソフトウェアツールを作り公開しました。<br>誰でも簡単にインストールし、直感的に操作できます。</p>
+        </section>
+        <section>
+            <h3>ツールのダウンロード先</h3>
+            <ul>
+                <li>Pypiのページは<a href="https://pypi.org/project/SimorghOCR/0.1.0/">こちら</a>　<span style="color: red;">pip install SimorghOCRでインストール</span></li>
+                <li>Githubのページは<a href="https://github.com/KidoIshi/SimorghOCR">こちら</a></li>
+            </ul>
+            <p>※事前にTesseractを<a href="https://github.com/tesseract-ocr/tesseract">こちら</a>からダウンロードしてください</p>
+        </section>
+        <section>
+            <h3>今後のソフトウェアのアップデート予定</h3>
+            <ul>
+                <li>APIを使用してkrakenのOCRをツールに組み込む</li>
+                <li>GUI上でアラビア文字表記が左右反対に表記されているので修正</li>
+                <li>TranskribusのAPI利用、若しくはTranksribusが利用しているPyLaiaを用いた転移学習と組み込み</li>
+                <li>TransformerやAttentionを使用したOCRモデル等で転移学習と組み込み</li>
+            </ul>
+        </section>
+        <section>
+            <h3>kraken</h3>
+            <p>非ラテン文字資料や手書き文字に強いオープンソースソフトウェアです。事前学習モデルが用意されているだけではなく、モデルの作成も容易です。同様の強みを持つ後述のTranskribusと比較した場合、krakenはオープンソースソフトウェアということも相まって、高度なカスタマイズ性を持っています。ドキュメントも詳しく、パラメータ調整を容易にするコマンドも幅広く用意されているので微調整できます。</p>
+            <h4>krakenとOSについて</h4>
+            <p>公式サイトにLinuxとMac OSのサポートしかないと書いていますが、Pythonのバージョンを3.8に変更したところ、Windows OSでインストール可能でした。コンソール上でペルシア語の事前学習済みのモデルを使用したOCRが問題なく可能です。</p>
+<h4>Windows上でkrakenの事前学習モデルを使用する方法</h4>
+            <ol>
+                <li>Python 3.8のインストール</li>
+                <li>pip install kraken</li>
+                <li>使用する事前学習済みのモデルをダウンロード</li>
+                <li>モデルとOCR対象があるディレクトリに移動</li>
+                <li>kraken -i (画像のファイル名) output.txt binarize segment ocr -m persian_best.mlmodelを実行</li>
+                <li>上記の例の場合、output.txtがカレントデイレクトリに結果として出力</li>
+                <img src="4.png" alt="画像の説明">
+            </ol>
+            <p>krakenの公式ドキュメントは<a href="https://kraken.re/main/index.html">こちら</a></p>
+        </section>
+        <section>
+            <h3>TranskribusとPyLaia</h3>
+            <p>Transkribusもkraken同様、手書き文字認識に優れているソフトウェアです。ノーコードで操作できる直観的なGUIを持つこと、モデルを簡単に作成できることが圧倒的な強みです。また、モデルの共有機能もあり、事前学習モデルも充実しています※。<br>しかし、オープンソースソフトウェアではないので、カスタマイズ性が低いという弱みがあります。<br>APIが提供されているので、そのAPIでどこまでできるか今後試みます。</p>
+            <p>※アラビア文字のTranskribusの事前学習モデルはOttoman Turkish_Printが公開されています</p>
+<p>PyLaiaはTranskribusが使用しているオープンソースソフトウェアの一つです。事前学習モデルはないですが、こちらもカスタマイズ性が高いので転移学習に利用し、結果がよければ現在のSimorghOCRに組み込む予定です。</p>
+        </section>
+        <section>
+<h3>募集</h3>
+<p>以下のいずれかのスキルを持つ共同研究者をそれぞれ募集しています</p>
+            <ul>
+                <li>ペルシア語写本に詳しい文献学者：知識を交換しながらペルシア語用のOCRを共に開発したいです。</li>
+                <li>OCRに詳しい開発者及び研究者（画像処理又は自然言語処理の知識がある人が望ましい）：知識を交換しながら開発を行いたいです。</li>
+            </ul>
+        </section>
+        <section>
+<h3>ソフトウェア及び研究についての問い合わせ先</h3>
+            <p>kido.ishikawa6[at]gmail.com</p>
+<p>文責：石川喜堂</p>
+        </section>
+    </main>
+</body>
+</html>
